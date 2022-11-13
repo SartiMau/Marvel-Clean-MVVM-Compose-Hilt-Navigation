@@ -4,7 +4,7 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.muri.domain.entity.Character
+import com.muri.domain.entity.MarvelCharacter
 import com.muri.domain.usecase.GetCharacterListUseCase
 import com.muri.domain.utils.CoroutineResult
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -40,7 +40,7 @@ class MainViewModel @Inject constructor(
 
     data class CharactersData(
         val characterState: CharactersState,
-        val characterInformation: List<Character> = emptyList()
+        val characterInformation: List<MarvelCharacter> = emptyList()
     )
 
     enum class CharactersState {
