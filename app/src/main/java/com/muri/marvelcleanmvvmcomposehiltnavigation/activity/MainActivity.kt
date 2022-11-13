@@ -31,6 +31,8 @@ class MainActivity : ComponentActivity() {
                 }
             }
         }
+
+        viewModel.getCharacters()
     }
 }
 

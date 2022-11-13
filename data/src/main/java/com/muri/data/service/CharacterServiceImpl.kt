@@ -5,34 +5,34 @@ import com.muri.data.mapper.mapToLocalCharacterList
 import com.muri.data.service.api.MarvelApi
 import com.muri.domain.entity.Character
 import com.muri.domain.service.CharacterService
-import com.muri.domain.utils.Result
+import com.muri.domain.utils.CoroutineResult
 import javax.inject.Inject
 
 class CharacterServiceImpl @Inject constructor(private val marvelApi: MarvelApi) : CharacterService {
 
-    override fun getCharacterList(): Result<List<Character>> {
+    override fun getCharacterList(): CoroutineResult<List<Character>> {
         try {
             val callResponse = marvelApi.getCharacterList()
             val response = callResponse.execute()
             if (response.isSuccessful) response.body()?.let {
-                return Result.Success(it.mapToLocalCharacterList())
+                return CoroutineResult.Success(it.mapToLocalCharacterList())
             }
         } catch (e: Exception) {
-            return Result.Failure(Exception())
+            return CoroutineResult.Failure(Exception())
         }
-        return Result.Failure(Exception())
+        return CoroutineResult.Failure(Exception())
     }
 
-    override fun getCharacter(id: String): Result<Character> {
+    override fun getCharacter(characterId: Int): CoroutineResult<Character> {
         try {
-            val callResponse = marvelApi.getCharacter(id)
+            val callResponse = marvelApi.getCharacter(characterId)
             val response = callResponse.execute()
             if (response.isSuccessful) response.body()?.let {
-                return Result.Success(it.mapToLocalCharacter())
+                return CoroutineResult.Success(it.mapToLocalCharacter())
             }
         } catch (e: Exception) {
-            return Result.Failure(Exception())
+            return CoroutineResult.Failure(Exception())
         }
-        return Result.Failure(Exception())
+        return CoroutineResult.Failure(Exception())
     }
 }

@@ -4,6 +4,8 @@ import android.content.Context
 import androidx.room.Room
 import com.muri.data.database.MarvelDB
 import com.muri.data.database.MarvelDao
+import com.muri.data.database.MarvelRepositoryImpl
+import com.muri.domain.database.MarvelRepository
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -19,7 +21,7 @@ object DataBaseModule {
 
     @Provides
     @Singleton
-    fun provideAppDatabase(@ApplicationContext context: Context,): MarvelDB {
+    fun provideAppDatabase(@ApplicationContext context: Context): MarvelDB {
         return Room
             .databaseBuilder(context, MarvelDB::class.java, DB)
             .build()
@@ -27,5 +29,8 @@ object DataBaseModule {
 
     @Provides
     @Singleton
-    fun providePosterDao(marvelDB: MarvelDB): MarvelDao = marvelDB.marvelDao()
+    fun provideMarvelDao(marvelDB: MarvelDB): MarvelDao = marvelDB.marvelDao()
+
+    @Provides
+    fun provideMarvelRepository(marvelDao: MarvelDao): MarvelRepository = MarvelRepositoryImpl(marvelDao)
 }

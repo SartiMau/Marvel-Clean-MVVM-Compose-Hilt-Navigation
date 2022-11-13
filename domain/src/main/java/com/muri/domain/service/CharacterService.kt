@@ -1,9 +1,9 @@
 package com.muri.domain.service
 
 import com.muri.domain.entity.Character
-import com.muri.domain.utils.Result
+import com.muri.domain.utils.CoroutineResult
 
 interface CharacterService {
-    fun getCharacterList(): Result<List<Character>>
-    fun getCharacter(id: String): Result<Character>
+    fun getCharacterList(): CoroutineResult<List<Character>>
+    fun getCharacter(characterId: Int): CoroutineResult<Character>
 }

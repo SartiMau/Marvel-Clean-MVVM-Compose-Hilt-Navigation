@@ -7,9 +7,10 @@ import retrofit2.http.GET
 import retrofit2.http.Path
 
 interface MarvelApi {
+
     @GET("/v1/public/characters")
     fun getCharacterList(): Call<DataResponse>
 
     @GET("/v1/public/characters/characterId")
-    fun getCharacter(@Path("characterId") id: String): Call<CharacterResponse>
+    fun getCharacter(@Path("characterId") characterId: Int): Call<CharacterResponse>
 }

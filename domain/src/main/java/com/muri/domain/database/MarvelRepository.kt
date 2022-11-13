@@ -1,11 +1,11 @@
 package com.muri.domain.database
 
 import com.muri.domain.entity.Character
-import com.muri.domain.utils.Result
+import com.muri.domain.utils.CoroutineResult
 
 interface MarvelRepository {
-    fun getDBCharacters(): Result<List<Character>>
-    fun getCharacter(id: String): Result<Character>
+    fun getDBCharacters(): CoroutineResult<List<Character>>
+    fun getCharacter(characterId: Int): CoroutineResult<Character>
     fun insertCharactersToDB(charactersList: List<Character>)
     fun insertCharacterToDB(character: Character)
 }

@@ -3,23 +3,24 @@ package com.muri.domain.usecase
 import com.muri.domain.database.MarvelRepository
 import com.muri.domain.entity.Character
 import com.muri.domain.service.CharacterService
-import com.muri.domain.utils.Result
+import com.muri.domain.utils.CoroutineResult
+import javax.inject.Inject
 
-interface GetCharactersUseCase {
-    operator fun invoke(): Result<List<Character>>
+interface GetCharacterListUseCase {
+    operator fun invoke(): CoroutineResult<List<Character>>
 }
 
-class GetCharactersUseCaseImpl(
+class GetCharacterListUseCaseImpl @Inject constructor(
     private val characterService: CharacterService,
     private val marvelRepository: MarvelRepository
-) : GetCharactersUseCase {
-    override operator fun invoke(): Result<List<Character>> {
+) : GetCharacterListUseCase {
+    override operator fun invoke(): CoroutineResult<List<Character>> {
         return when (val serviceResult = characterService.getCharacterList()) {
-            is Result.Success -> {
+            is CoroutineResult.Success -> {
                 marvelRepository.insertCharactersToDB(serviceResult.data)
                 marvelRepository.getDBCharacters()
             }
-            is Result.Failure -> marvelRepository.getDBCharacters()
+            is CoroutineResult.Failure -> marvelRepository.getDBCharacters()
         }
     }
 }

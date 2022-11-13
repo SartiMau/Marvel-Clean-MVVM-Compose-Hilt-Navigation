@@ -5,16 +5,16 @@ import com.muri.data.mapper.mapToDataBaseCharacter
 import com.muri.data.mapper.mapToLocalCharacter
 import com.muri.domain.database.MarvelRepository
 import com.muri.domain.entity.Character
-import com.muri.domain.utils.Result
+import com.muri.domain.utils.CoroutineResult
 
 class MarvelRepositoryImpl(private val charactersDao: MarvelDao) : MarvelRepository {
 
-    override fun getDBCharacters(): Result<List<Character>> =
+    override fun getDBCharacters(): CoroutineResult<List<Character>> =
         charactersDao.getDBCharacters().let {
             if (it.isNotEmpty()) {
-                Result.Success(it.mapToCharacterList())
+                CoroutineResult.Success(it.mapToCharacterList())
             } else {
-                Result.Failure(Exception())
+                CoroutineResult.Failure(Exception())
             }
         }
 
@@ -24,12 +24,12 @@ class MarvelRepositoryImpl(private val charactersDao: MarvelDao) : MarvelReposit
         }
     }
 
-    override fun getCharacter(id: String): Result<Character> =
-        charactersDao.getCharacter(id).let {
+    override fun getCharacter(characterId: Int): CoroutineResult<Character> =
+        charactersDao.getCharacter(characterId).let {
             if (it.isNotEmpty()) {
-                Result.Success(it.first().mapToLocalCharacter())
+                CoroutineResult.Success(it.first().mapToLocalCharacter())
             } else {
-                Result.Failure(Exception())
+                CoroutineResult.Failure(Exception())
             }
         }
 

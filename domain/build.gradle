@@ -16,11 +16,11 @@ compileKotlin {
 }.dependsOn ktlintFormat
 
 dependencies {
-    //hilt
+    //Hilt
     implementation 'com.google.dagger:hilt-core:2.42'
     kapt 'com.google.dagger:hilt-compiler:2.42'
 
-    //unit testing
+    //Unit testing
     testImplementation "junit:junit:4.13.2"
     testImplementation "org.mockito.kotlin:mockito-kotlin:4.0.0"
     testImplementation "androidx.arch.core:core-testing:2.1.0"
