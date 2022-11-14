@@ -4,10 +4,7 @@ import com.muri.domain.entity.MarvelCharacter
 import org.junit.Assert.assertEquals
 import org.junit.Before
 import org.junit.Test
-import org.junit.runner.RunWith
-import org.mockito.junit.MockitoJUnitRunner
 
-@RunWith(MockitoJUnitRunner::class)
 class CharacterMapperTest {
     private lateinit var character: MarvelCharacter
 

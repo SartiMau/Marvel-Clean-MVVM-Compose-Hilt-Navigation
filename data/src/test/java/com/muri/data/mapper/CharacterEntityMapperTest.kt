@@ -4,10 +4,7 @@ import com.muri.data.database.entity.CharacterEntity
 import org.junit.Assert.assertEquals
 import org.junit.Before
 import org.junit.Test
-import org.junit.runner.RunWith
-import org.mockito.junit.MockitoJUnitRunner
 
-@RunWith(MockitoJUnitRunner::class)
 class CharacterEntityMapperTest {
     private lateinit var characterEntity: CharacterEntity
     private lateinit var characterEntityList: List<CharacterEntity>

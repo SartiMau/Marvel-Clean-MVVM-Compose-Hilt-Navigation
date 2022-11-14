@@ -7,10 +7,7 @@ import com.muri.data.service.model.ResultResponse
 import org.junit.Assert.assertEquals
 import org.junit.Before
 import org.junit.Test
-import org.junit.runner.RunWith
-import org.mockito.junit.MockitoJUnitRunner
 
-@RunWith(MockitoJUnitRunner::class)
 class ResponseMapperTest {
     private lateinit var resultResponse: ResultResponse
     private lateinit var dataResponse: DataResponse
