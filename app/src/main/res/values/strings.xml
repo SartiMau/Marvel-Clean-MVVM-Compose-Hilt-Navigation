@@ -1,3 +1,14 @@
 <resources>
     <string name="app_name">MarvelCleanMVVMComposeHiltNavigation</string>
+
+    <string name="main_screen_title">Marvel-App</string>
+    <string name="main_screen_content">Press the button to get a list with 20 Marvel characters alphabetically ordered</string>
+    <string name="main_screen_button">Press me</string>
+
+    <string name="marvel_character_list_screen_button">Character list</string>
+
+    <string name="marvel_character_detail_screen_id">#%1$s</string>
+    <string name="marvel_character_detail_screen_content_description">Content description</string>
+    <string name="marvel_character_detail_screen_no_description">No description available</string>
+    <string name="marvel_character_detail_screen_disclaimer">*Tap on the image to see the dialog version</string>
 </resources>
