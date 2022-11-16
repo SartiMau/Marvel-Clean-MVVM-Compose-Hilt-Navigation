@@ -12,9 +12,10 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.MarvelCleanMVVMComposeHiltNavigation"
+        android:usesCleartextTraffic="true"
         tools:targetApi="31">
         <activity
-            android:name=".activity.MainActivity"
+            android:name=".ui.screen.activity.MainActivity"
             android:exported="true"
             android:theme="@style/Theme.MarvelCleanMVVMComposeHiltNavigation">
             <intent-filter>
