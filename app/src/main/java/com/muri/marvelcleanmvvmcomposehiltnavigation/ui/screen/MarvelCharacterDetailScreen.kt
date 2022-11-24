@@ -17,7 +17,6 @@ import androidx.constraintlayout.compose.ConstraintLayout
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.muri.domain.entity.MarvelCharacter
 import com.muri.marvelcleanmvvmcomposehiltnavigation.R
-import com.muri.marvelcleanmvvmcomposehiltnavigation.mvvm.MarvelCharacterDetailViewModel
 import com.muri.marvelcleanmvvmcomposehiltnavigation.ui.component.BackgroundImage
 import com.muri.marvelcleanmvvmcomposehiltnavigation.ui.component.CardContentText
 import com.muri.marvelcleanmvvmcomposehiltnavigation.ui.component.ContentText
@@ -25,6 +24,7 @@ import com.muri.marvelcleanmvvmcomposehiltnavigation.ui.component.ErrorDialog
 import com.muri.marvelcleanmvvmcomposehiltnavigation.ui.component.Loader
 import com.muri.marvelcleanmvvmcomposehiltnavigation.ui.component.RemoteImage
 import com.muri.marvelcleanmvvmcomposehiltnavigation.ui.theme.MarvelCleanMVVMComposeHiltNavigationTheme
+import com.muri.marvelcleanmvvmcomposehiltnavigation.viewmodel.MarvelCharacterDetailViewModel
 
 @Composable
 fun MarvelCharacterDetailScreen(
@@ -33,19 +33,19 @@ fun MarvelCharacterDetailScreen(
     onImageClicked: (marvelCharacter: MarvelCharacter) -> Unit,
     onError: () -> Unit
 ) {
-    val data: MarvelCharacterDetailViewModel.Data = viewModel.state.collectAsState().value
-    viewModel.getCharacters(marvelCharacterId)
+    val data: MarvelCharacterDetailViewModel.CharacterDetailData = viewModel.state.collectAsState().value
+    viewModel.getCharacter(marvelCharacterId)
 
     BackgroundImage()
 
     when (data.state) {
-        MarvelCharacterDetailViewModel.State.LOADING -> {
+        MarvelCharacterDetailViewModel.CharacterDetailState.LOADING -> {
             Loader()
         }
-        MarvelCharacterDetailViewModel.State.SHOW_CHARACTER -> {
+        MarvelCharacterDetailViewModel.CharacterDetailState.SHOW_CHARACTER -> {
             data.marvelCharacter?.let { ShowCharacter(it, onImageClicked) }
         }
-        MarvelCharacterDetailViewModel.State.ERROR -> {
+        MarvelCharacterDetailViewModel.CharacterDetailState.ERROR -> {
             data.exception?.let { ErrorDialog(it, onError) }
         }
     }

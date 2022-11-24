@@ -14,13 +14,13 @@ import androidx.constraintlayout.compose.ConstraintLayout
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.muri.domain.entity.MarvelCharacter
 import com.muri.marvelcleanmvvmcomposehiltnavigation.R
-import com.muri.marvelcleanmvvmcomposehiltnavigation.mvvm.MarvelCharacterListViewModel
 import com.muri.marvelcleanmvvmcomposehiltnavigation.ui.component.BackgroundImage
 import com.muri.marvelcleanmvvmcomposehiltnavigation.ui.component.ErrorDialog
 import com.muri.marvelcleanmvvmcomposehiltnavigation.ui.component.Loader
 import com.muri.marvelcleanmvvmcomposehiltnavigation.ui.component.MarvelCard
 import com.muri.marvelcleanmvvmcomposehiltnavigation.ui.component.TitleText
 import com.muri.marvelcleanmvvmcomposehiltnavigation.ui.theme.MarvelCleanMVVMComposeHiltNavigationTheme
+import com.muri.marvelcleanmvvmcomposehiltnavigation.viewmodel.MarvelCharacterListViewModel
 
 @Composable
 fun MarvelCharacterListScreen(
@@ -28,26 +28,26 @@ fun MarvelCharacterListScreen(
     onItemClicked: (marvelCharacter: MarvelCharacter) -> Unit,
     onError: () -> Unit
 ) {
-    val data: MarvelCharacterListViewModel.Data = viewModel.state.collectAsState().value
+    val data: MarvelCharacterListViewModel.CharacterListData = viewModel.state.collectAsState().value
     viewModel.getCharacters()
 
     BackgroundImage()
 
     when (data.state) {
-        MarvelCharacterListViewModel.State.LOADING -> {
+        MarvelCharacterListViewModel.CharacterListState.LOADING -> {
             Loader()
         }
-        MarvelCharacterListViewModel.State.SHOW_CHARACTERS -> {
+        MarvelCharacterListViewModel.CharacterListState.SHOW_CHARACTERS -> {
             ShowCharacters(data.characterList, onItemClicked)
         }
-        MarvelCharacterListViewModel.State.ERROR -> {
+        MarvelCharacterListViewModel.CharacterListState.ERROR -> {
             data.exception?.let { ErrorDialog(it, onError) }
         }
     }
 }
 
 @Composable
-fun ShowCharacters(characterList: List<MarvelCharacter>, onItemClicked: (marvelCharacter: MarvelCharacter) -> Unit) {
+private fun ShowCharacters(characterList: List<MarvelCharacter>, onItemClicked: (marvelCharacter: MarvelCharacter) -> Unit) {
     ConstraintLayout(
         modifier = Modifier
             .fillMaxSize()

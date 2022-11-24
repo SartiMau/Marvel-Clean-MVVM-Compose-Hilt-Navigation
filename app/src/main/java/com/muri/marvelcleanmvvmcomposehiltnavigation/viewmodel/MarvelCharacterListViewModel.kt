@@ -1,4 +1,4 @@
-package com.muri.marvelcleanmvvmcomposehiltnavigation.mvvm
+package com.muri.marvelcleanmvvmcomposehiltnavigation.viewmodel
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -18,32 +18,32 @@ class MarvelCharacterListViewModel @Inject constructor(
     private val getCharacterListUseCase: GetCharacterListUseCase
 ) : ViewModel() {
 
-    private var mutableState = MutableStateFlow(Data(State.LOADING))
-    val state: StateFlow<Data> = mutableState
+    private var mutableState = MutableStateFlow(CharacterListData(CharacterListState.LOADING))
+    val state: StateFlow<CharacterListData> = mutableState
 
     fun getCharacters() = viewModelScope.launch {
         withContext(Dispatchers.IO) { getCharacterListUseCase() }.let { result ->
             when (result) {
                 is CoroutineResult.Success -> {
                     mutableState.value = mutableState.value.copy(
-                        state = State.SHOW_CHARACTERS,
+                        state = CharacterListState.SHOW_CHARACTERS,
                         characterList = result.data
                     )
                 }
                 is CoroutineResult.Failure -> {
-                    mutableState.value = mutableState.value.copy(state = State.ERROR, exception = result.exception)
+                    mutableState.value = mutableState.value.copy(state = CharacterListState.ERROR, exception = result.exception)
                 }
             }
         }
     }
 
-    data class Data(
-        val state: State,
+    data class CharacterListData(
+        val state: CharacterListState,
         val characterList: List<MarvelCharacter> = emptyList(),
         val exception: Exception? = null
     )
 
-    enum class State {
+    enum class CharacterListState {
         LOADING,
         SHOW_CHARACTERS,
         ERROR

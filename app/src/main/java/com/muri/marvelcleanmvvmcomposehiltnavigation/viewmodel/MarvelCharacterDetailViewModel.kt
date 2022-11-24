@@ -1,4 +1,4 @@
-package com.muri.marvelcleanmvvmcomposehiltnavigation.mvvm
+package com.muri.marvelcleanmvvmcomposehiltnavigation.viewmodel
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -18,32 +18,32 @@ class MarvelCharacterDetailViewModel @Inject constructor(
     private val getCharacterUseCase: GetCharacterUseCase
 ) : ViewModel() {
 
-    private var mutableState = MutableStateFlow(Data(State.LOADING))
-    val state: StateFlow<Data> = mutableState
+    private var mutableState = MutableStateFlow(CharacterDetailData(CharacterDetailState.LOADING))
+    val state: StateFlow<CharacterDetailData> = mutableState
 
-    fun getCharacters(characterId: Int) = viewModelScope.launch {
+    fun getCharacter(characterId: Int) = viewModelScope.launch {
         withContext(Dispatchers.IO) { getCharacterUseCase(characterId) }.let { result ->
             when (result) {
                 is CoroutineResult.Success -> {
                     mutableState.value = mutableState.value.copy(
-                        state = State.SHOW_CHARACTER,
+                        state = CharacterDetailState.SHOW_CHARACTER,
                         marvelCharacter = result.data
                     )
                 }
                 is CoroutineResult.Failure -> {
-                    mutableState.value = mutableState.value.copy(state = State.ERROR, exception = result.exception)
+                    mutableState.value = mutableState.value.copy(state = CharacterDetailState.ERROR, exception = result.exception)
                 }
             }
         }
     }
 
-    data class Data(
-        val state: State,
+    data class CharacterDetailData(
+        val state: CharacterDetailState,
         val marvelCharacter: MarvelCharacter? = null,
         val exception: Exception? = null
     )
 
-    enum class State {
+    enum class CharacterDetailState {
         LOADING,
         SHOW_CHARACTER,
         ERROR
