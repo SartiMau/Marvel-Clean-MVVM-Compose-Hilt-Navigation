@@ -11,6 +11,8 @@ import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Card
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -24,6 +26,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Dialog
 import androidx.compose.ui.window.DialogProperties
 import androidx.constraintlayout.compose.ConstraintLayout
+import androidx.hilt.navigation.compose.hiltViewModel
 import com.muri.domain.entity.MarvelCharacter
 import com.muri.marvelcleanmvvmcomposehiltnavigation.R
 import com.muri.marvelcleanmvvmcomposehiltnavigation.ui.component.CardContentText
@@ -32,12 +35,30 @@ import com.muri.marvelcleanmvvmcomposehiltnavigation.ui.component.RemoteImage
 import com.muri.marvelcleanmvvmcomposehiltnavigation.ui.theme.GradientEnd
 import com.muri.marvelcleanmvvmcomposehiltnavigation.ui.theme.GradientStart
 import com.muri.marvelcleanmvvmcomposehiltnavigation.ui.theme.MarvelCleanMVVMComposeHiltNavigationTheme
+import com.muri.marvelcleanmvvmcomposehiltnavigation.viewmodel.MarvelCharacterDialogViewModel
+import com.muri.marvelcleanmvvmcomposehiltnavigation.viewmodel.MarvelCharacterDialogViewModel.MarvelCharacterDialogData
+import com.muri.marvelcleanmvvmcomposehiltnavigation.viewmodel.MarvelCharacterDialogViewModel.MarvelCharacterDialogState
 
 @Composable
 fun MarvelCharacterDialogScreen(
     marvelCharacter: MarvelCharacter,
+    viewModel: MarvelCharacterDialogViewModel = hiltViewModel(),
     onDismiss: () -> Unit
 ) {
+    val data: MarvelCharacterDialogData = viewModel.state.collectAsState().value
+
+    when (data.state) {
+        MarvelCharacterDialogState.DRAW -> DrawScreen(viewModel, marvelCharacter)
+        MarvelCharacterDialogState.ON_DIALOG_DISMISSED -> {
+            LaunchedEffect(Unit) {
+                onDismiss()
+            }
+        }
+    }
+}
+
+@Composable
+fun DrawScreen(viewModel: MarvelCharacterDialogViewModel, marvelCharacter: MarvelCharacter) {
     var showDialog by remember { mutableStateOf(true) }
     val scrollState = rememberScrollState()
 
@@ -46,7 +67,7 @@ fun MarvelCharacterDialogScreen(
     if (showDialog) {
         Dialog(
             onDismissRequest = {
-                onDismiss()
+                viewModel.onDismiss()
                 showDialog = false
             },
             properties = DialogProperties(
