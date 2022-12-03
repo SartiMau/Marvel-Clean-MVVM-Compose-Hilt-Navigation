@@ -9,12 +9,24 @@ import javax.inject.Inject
 @HiltViewModel
 class MainViewModel @Inject constructor() : ViewModel() {
 
-    private var mutableState = MutableStateFlow(MainData(MainState.DRAW))
+    private var mutableState = MutableStateFlow(MainData(MainState.IDLE))
     val state: StateFlow<MainData> = mutableState
+
+    fun draw() {
+        mutableState.value = mutableState.value.copy(
+            state = MainState.DRAW
+        )
+    }
 
     fun onButtonPressed() {
         mutableState.value = mutableState.value.copy(
             state = MainState.GO_TO_CHARACTER_LIST
+        )
+    }
+
+    fun onStop() {
+        mutableState.value = mutableState.value.copy(
+            state = MainState.IDLE
         )
     }
 
@@ -23,6 +35,7 @@ class MainViewModel @Inject constructor() : ViewModel() {
     )
 
     enum class MainState {
+        IDLE,
         DRAW,
         GO_TO_CHARACTER_LIST
     }

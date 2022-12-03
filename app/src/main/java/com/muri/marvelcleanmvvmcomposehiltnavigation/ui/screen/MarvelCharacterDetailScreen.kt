@@ -15,6 +15,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.constraintlayout.compose.ConstraintLayout
 import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.lifecycle.Lifecycle
 import com.muri.domain.entity.MarvelCharacter
 import com.muri.marvelcleanmvvmcomposehiltnavigation.R
 import com.muri.marvelcleanmvvmcomposehiltnavigation.ui.component.BackgroundImage
@@ -24,6 +25,7 @@ import com.muri.marvelcleanmvvmcomposehiltnavigation.ui.component.ErrorDialog
 import com.muri.marvelcleanmvvmcomposehiltnavigation.ui.component.Loader
 import com.muri.marvelcleanmvvmcomposehiltnavigation.ui.component.RemoteImage
 import com.muri.marvelcleanmvvmcomposehiltnavigation.ui.theme.MarvelCleanMVVMComposeHiltNavigationTheme
+import com.muri.marvelcleanmvvmcomposehiltnavigation.ui.util.OnLifecycleEvent
 import com.muri.marvelcleanmvvmcomposehiltnavigation.viewmodel.MarvelCharacterDetailViewModel
 
 @Composable
@@ -34,7 +36,13 @@ fun MarvelCharacterDetailScreen(
     onError: () -> Unit
 ) {
     val data: MarvelCharacterDetailViewModel.CharacterDetailData = viewModel.state.collectAsState().value
-    viewModel.getCharacter(marvelCharacterId)
+
+    OnLifecycleEvent { _, event ->
+        when (event) {
+            Lifecycle.Event.ON_RESUME -> viewModel.getCharacter(marvelCharacterId)
+            else -> {}
+        }
+    }
 
     BackgroundImage()
 

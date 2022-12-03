@@ -12,6 +12,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.constraintlayout.compose.ConstraintLayout
 import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.lifecycle.Lifecycle
 import com.muri.domain.entity.MarvelCharacter
 import com.muri.marvelcleanmvvmcomposehiltnavigation.R
 import com.muri.marvelcleanmvvmcomposehiltnavigation.ui.component.BackgroundImage
@@ -20,6 +21,7 @@ import com.muri.marvelcleanmvvmcomposehiltnavigation.ui.component.Loader
 import com.muri.marvelcleanmvvmcomposehiltnavigation.ui.component.MarvelCard
 import com.muri.marvelcleanmvvmcomposehiltnavigation.ui.component.TitleText
 import com.muri.marvelcleanmvvmcomposehiltnavigation.ui.theme.MarvelCleanMVVMComposeHiltNavigationTheme
+import com.muri.marvelcleanmvvmcomposehiltnavigation.ui.util.OnLifecycleEvent
 import com.muri.marvelcleanmvvmcomposehiltnavigation.viewmodel.MarvelCharacterListViewModel
 
 @Composable
@@ -29,7 +31,13 @@ fun MarvelCharacterListScreen(
     onError: () -> Unit
 ) {
     val data: MarvelCharacterListViewModel.CharacterListData = viewModel.state.collectAsState().value
-    viewModel.getCharacters()
+
+    OnLifecycleEvent { _, event ->
+        when (event) {
+            Lifecycle.Event.ON_RESUME -> viewModel.getCharacters()
+            else -> {}
+        }
+    }
 
     BackgroundImage()
 
