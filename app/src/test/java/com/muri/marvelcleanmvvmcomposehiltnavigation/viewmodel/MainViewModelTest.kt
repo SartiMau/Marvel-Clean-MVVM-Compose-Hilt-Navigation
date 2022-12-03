@@ -36,7 +36,7 @@ class MainViewModelTest {
 
             viewModel.onButtonPressed()
 
-            assertEquals(MainData(MainState.DRAW), listOfEmittedResult[0])
+            assertEquals(MainData(MainState.IDLE), listOfEmittedResult[0])
             assertEquals(MainData(MainState.GO_TO_CHARACTER_LIST), listOfEmittedResult[1])
 
             job.cancel()

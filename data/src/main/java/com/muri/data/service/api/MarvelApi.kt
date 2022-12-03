@@ -11,6 +11,6 @@ interface MarvelApi {
     @GET("/v1/public/characters")
     fun getCharacterList(): Call<DataResponse>
 
-    @GET("/v1/public/characters/characterId")
+    @GET("/v1/public/characters/{characterId}")
     fun getCharacter(@Path("characterId") characterId: Int): Call<CharacterResponse>
 }
