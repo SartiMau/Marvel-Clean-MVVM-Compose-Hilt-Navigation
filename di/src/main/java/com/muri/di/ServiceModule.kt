@@ -1,4 +1,4 @@
-package com.muri.data.di
+package com.muri.di
 
 import com.muri.data.service.CharacterServiceImpl
 import com.muri.data.service.api.MarvelApi

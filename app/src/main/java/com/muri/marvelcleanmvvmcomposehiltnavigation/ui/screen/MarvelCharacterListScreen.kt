@@ -7,10 +7,12 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.layout.layoutId
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.constraintlayout.compose.ConstraintLayout
+import androidx.constraintlayout.compose.ConstraintSet
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.Lifecycle
 import com.muri.domain.entity.MarvelCharacter
@@ -20,6 +22,8 @@ import com.muri.marvelcleanmvvmcomposehiltnavigation.ui.component.ErrorDialog
 import com.muri.marvelcleanmvvmcomposehiltnavigation.ui.component.Loader
 import com.muri.marvelcleanmvvmcomposehiltnavigation.ui.component.MarvelCard
 import com.muri.marvelcleanmvvmcomposehiltnavigation.ui.component.TitleText
+import com.muri.marvelcleanmvvmcomposehiltnavigation.ui.screen.MarvelCharacterListScreenId.CONTENT_LAYOUT_ID
+import com.muri.marvelcleanmvvmcomposehiltnavigation.ui.screen.MarvelCharacterListScreenId.TITLE_LAYOUT_ID
 import com.muri.marvelcleanmvvmcomposehiltnavigation.ui.theme.MarvelCleanMVVMComposeHiltNavigationTheme
 import com.muri.marvelcleanmvvmcomposehiltnavigation.ui.util.OnLifecycleEvent
 import com.muri.marvelcleanmvvmcomposehiltnavigation.viewmodel.MarvelCharacterListViewModel
@@ -59,29 +63,19 @@ private fun ShowCharacters(characterList: List<MarvelCharacter>, onItemClicked: 
     ConstraintLayout(
         modifier = Modifier
             .fillMaxSize()
-            .padding(top = 25.dp, end = 15.dp, bottom = 15.dp)
+            .padding(top = 25.dp, end = 15.dp, bottom = 15.dp),
+        constraintSet = getScreenConstrainSet()
     ) {
-        val (title, content) = createRefs()
-        createVerticalChain(title, content)
-
         TitleText(
             text = stringResource(id = R.string.marvel_character_list_screen_button),
             modifier = Modifier
+                .layoutId(TITLE_LAYOUT_ID)
                 .fillMaxWidth()
-                .constrainAs(title) {
-                    top.linkTo(parent.top)
-                    bottom.linkTo(content.top)
-                }
         )
         LazyColumn(
             modifier = Modifier
+                .layoutId(CONTENT_LAYOUT_ID)
                 .fillMaxWidth()
-                .constrainAs(content) {
-                    start.linkTo(parent.start)
-                    top.linkTo(title.bottom)
-                    end.linkTo(parent.end)
-                    bottom.linkTo(parent.bottom)
-                }
         ) {
             items(characterList.size) { index ->
                 MarvelCard(
@@ -93,10 +87,33 @@ private fun ShowCharacters(characterList: List<MarvelCharacter>, onItemClicked: 
     }
 }
 
+private fun getScreenConstrainSet() = ConstraintSet {
+    val title = createRefFor(TITLE_LAYOUT_ID)
+    val content = createRefFor(CONTENT_LAYOUT_ID)
+
+    createVerticalChain(title, content)
+
+    constrain(title) {
+        top.linkTo(parent.top)
+        bottom.linkTo(content.top)
+    }
+    constrain(content) {
+        start.linkTo(parent.start)
+        top.linkTo(title.bottom)
+        end.linkTo(parent.end)
+        bottom.linkTo(parent.bottom)
+    }
+}
+
 @Preview
 @Composable
 fun ShowCharacters() {
     MarvelCleanMVVMComposeHiltNavigationTheme {
         ShowCharacters(listOf(MarvelCharacter(id = 9292, name = "Muriman", description = "Qué es eso?? Es Muriman", img = ""))) { }
     }
+}
+
+private object MarvelCharacterListScreenId {
+    const val TITLE_LAYOUT_ID = "TITLE_LAYOUT_ID"
+    const val CONTENT_LAYOUT_ID = "CONTENT_LAYOUT_ID"
 }

@@ -1,4 +1,4 @@
-package com.muri.domain.di
+package com.muri.di
 
 import com.muri.domain.database.MarvelRepository
 import com.muri.domain.service.CharacterService

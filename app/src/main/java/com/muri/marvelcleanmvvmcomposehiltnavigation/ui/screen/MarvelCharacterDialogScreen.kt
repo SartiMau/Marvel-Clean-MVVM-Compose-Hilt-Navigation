@@ -20,18 +20,24 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.layout.layoutId
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Dialog
 import androidx.compose.ui.window.DialogProperties
 import androidx.constraintlayout.compose.ConstraintLayout
+import androidx.constraintlayout.compose.ConstraintSet
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.muri.domain.entity.MarvelCharacter
 import com.muri.marvelcleanmvvmcomposehiltnavigation.R
 import com.muri.marvelcleanmvvmcomposehiltnavigation.ui.component.CardContentText
 import com.muri.marvelcleanmvvmcomposehiltnavigation.ui.component.CardDescriptionText
 import com.muri.marvelcleanmvvmcomposehiltnavigation.ui.component.RemoteImage
+import com.muri.marvelcleanmvvmcomposehiltnavigation.ui.screen.MarvelCharacterDialogScreenId.CHARACTER_LAYOUT_ID
+import com.muri.marvelcleanmvvmcomposehiltnavigation.ui.screen.MarvelCharacterDialogScreenId.DESCRIPTION_LAYOUT_ID
+import com.muri.marvelcleanmvvmcomposehiltnavigation.ui.screen.MarvelCharacterDialogScreenId.IMAGE_LAYOUT_ID
+import com.muri.marvelcleanmvvmcomposehiltnavigation.ui.screen.MarvelCharacterDialogScreenId.NAME_LAYOUT_ID
 import com.muri.marvelcleanmvvmcomposehiltnavigation.ui.theme.GradientEnd
 import com.muri.marvelcleanmvvmcomposehiltnavigation.ui.theme.GradientStart
 import com.muri.marvelcleanmvvmcomposehiltnavigation.ui.theme.MarvelCleanMVVMComposeHiltNavigationTheme
@@ -89,60 +95,71 @@ fun DrawScreen(viewModel: MarvelCharacterDialogViewModel, marvelCharacter: Marve
                         .scrollable(
                             state = scrollState,
                             orientation = Orientation.Vertical
-                        )
+                        ),
+                    constraintSet = getScreenConstraintSet()
                 ) {
-                    val (id, image, name, description) = createRefs()
-                    createVerticalChain(image, name, description)
-
                     CardContentText(
                         text = stringResource(id = R.string.marvel_character_detail_screen_id, marvelCharacter.id),
                         modifier = Modifier
+                            .layoutId(CHARACTER_LAYOUT_ID)
                             .padding(10.dp)
-                            .constrainAs(id) {
-                                start.linkTo(parent.start)
-                                top.linkTo(parent.top)
-                            }
                     )
                     RemoteImage(
                         imgPath = marvelCharacter.img,
                         contentDescription = stringResource(id = R.string.marvel_character_detail_screen_content_description),
-                        modifier = Modifier
-                            .constrainAs(image) {
-                                start.linkTo(parent.start)
-                                top.linkTo(id.bottom)
-                                end.linkTo(parent.end)
-                                bottom.linkTo(name.top)
-                            }
+                        modifier = Modifier.layoutId(IMAGE_LAYOUT_ID)
                     )
                     CardContentText(
                         text = marvelCharacter.name,
                         modifier = Modifier
+                            .layoutId(NAME_LAYOUT_ID)
                             .fillMaxWidth()
                             .padding(top = 15.dp)
-                            .constrainAs(name) {
-                                start.linkTo(parent.start)
-                                top.linkTo(image.bottom)
-                                end.linkTo(parent.end)
-                                bottom.linkTo(description.top)
-                            }
                     )
                     CardDescriptionText(
                         text = marvelCharacter.description.ifEmpty {
                             stringResource(id = R.string.marvel_character_detail_screen_no_description)
                         },
                         modifier = Modifier
+                            .layoutId(DESCRIPTION_LAYOUT_ID)
                             .fillMaxWidth()
                             .padding(top = 15.dp)
-                            .constrainAs(description) {
-                                start.linkTo(parent.start)
-                                top.linkTo(name.bottom)
-                                end.linkTo(parent.end)
-                                bottom.linkTo(parent.bottom)
-                            }
                     )
                 }
             }
         }
+    }
+}
+
+private fun getScreenConstraintSet() = ConstraintSet {
+    val id = createRefFor(CHARACTER_LAYOUT_ID)
+    val image = createRefFor(IMAGE_LAYOUT_ID)
+    val name = createRefFor(NAME_LAYOUT_ID)
+    val description = createRefFor(DESCRIPTION_LAYOUT_ID)
+
+    createVerticalChain(image, name, description)
+
+    constrain(id) {
+        start.linkTo(parent.start)
+        top.linkTo(parent.top)
+    }
+    constrain(image) {
+        start.linkTo(parent.start)
+        top.linkTo(id.bottom)
+        end.linkTo(parent.end)
+        bottom.linkTo(name.top)
+    }
+    constrain(name) {
+        start.linkTo(parent.start)
+        top.linkTo(image.bottom)
+        end.linkTo(parent.end)
+        bottom.linkTo(description.top)
+    }
+    constrain(description) {
+        start.linkTo(parent.start)
+        top.linkTo(name.bottom)
+        end.linkTo(parent.end)
+        bottom.linkTo(parent.bottom)
     }
 }
 
@@ -152,4 +169,11 @@ private fun MarvelCharacterDialogScreenPreview() {
     MarvelCleanMVVMComposeHiltNavigationTheme {
         MarvelCharacterDialogScreen(MarvelCharacter(9292, "Muriman", "Es genial", "")) { }
     }
+}
+
+private object MarvelCharacterDialogScreenId {
+    const val CHARACTER_LAYOUT_ID = "CHARACTER_LAYOUT_ID"
+    const val IMAGE_LAYOUT_ID = "IMAGE_LAYOUT_ID"
+    const val NAME_LAYOUT_ID = "NAME_LAYOUT_ID"
+    const val DESCRIPTION_LAYOUT_ID = "DESCRIPTION_LAYOUT_ID"
 }
