@@ -1,4 +1,4 @@
-package com.muri.data.di
+package com.muri.di
 
 import android.content.Context
 import androidx.room.Room

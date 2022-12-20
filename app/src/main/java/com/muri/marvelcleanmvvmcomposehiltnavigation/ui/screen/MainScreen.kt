@@ -23,6 +23,9 @@ import com.muri.marvelcleanmvvmcomposehiltnavigation.R
 import com.muri.marvelcleanmvvmcomposehiltnavigation.ui.component.BackgroundImage
 import com.muri.marvelcleanmvvmcomposehiltnavigation.ui.component.ContentText
 import com.muri.marvelcleanmvvmcomposehiltnavigation.ui.component.TitleText
+import com.muri.marvelcleanmvvmcomposehiltnavigation.ui.screen.MainScreenId.BUTTON_LAYOUT_ID
+import com.muri.marvelcleanmvvmcomposehiltnavigation.ui.screen.MainScreenId.CONTENT_LAYOUT_ID
+import com.muri.marvelcleanmvvmcomposehiltnavigation.ui.screen.MainScreenId.TITLE_LAYOUT_ID
 import com.muri.marvelcleanmvvmcomposehiltnavigation.ui.theme.MarvelCleanMVVMComposeHiltNavigationTheme
 import com.muri.marvelcleanmvvmcomposehiltnavigation.ui.util.OnLifecycleEvent
 import com.muri.marvelcleanmvvmcomposehiltnavigation.viewmodel.MainViewModel
@@ -56,51 +59,29 @@ fun MainScreen(
 @Composable
 private fun DrawScreen(viewModel: MainViewModel) {
     BackgroundImage()
-    val constraintSet = ConstraintSet {
-        val title = createRefFor(MainScreenID.TITLE_LAYOUT_ID)
-        val content = createRefFor(MainScreenID.CONTENT_LAYOUT_ID)
-        val button = createRefFor(MainScreenID.BUTTON_LAYOUT_ID)
-
-        constrain(title) {
-            top.linkTo(parent.top)
-            bottom.linkTo(content.top)
-        }
-
-        constrain(content) {
-            top.linkTo(title.bottom)
-            bottom.linkTo(button.top)
-        }
-
-        constrain(button) {
-            top.linkTo(content.bottom)
-            bottom.linkTo(parent.bottom)
-            start.linkTo(parent.start)
-            end.linkTo(parent.end)
-        }
-    }
 
     ConstraintLayout(
         modifier = Modifier
             .fillMaxSize()
             .padding(15.dp),
-        constraintSet = constraintSet
+        constraintSet = getScreenConstrainSet()
     ) {
         TitleText(
             text = stringResource(R.string.main_screen_title),
             modifier = Modifier
-                .layoutId(MainScreenID.TITLE_LAYOUT_ID)
+                .layoutId(TITLE_LAYOUT_ID)
                 .fillMaxWidth()
 
         )
         ContentText(
             text = stringResource(R.string.main_screen_content),
             modifier = Modifier
-                .layoutId(MainScreenID.CONTENT_LAYOUT_ID)
+                .layoutId(CONTENT_LAYOUT_ID)
                 .fillMaxWidth()
         )
         Button(
             onClick = { viewModel.onButtonPressed() },
-            modifier = Modifier.layoutId(MainScreenID.BUTTON_LAYOUT_ID),
+            modifier = Modifier.layoutId(BUTTON_LAYOUT_ID),
             colors = ButtonDefaults.buttonColors(
                 containerColor = Color.DarkGray,
                 contentColor = Color.Red
@@ -113,6 +94,29 @@ private fun DrawScreen(viewModel: MainViewModel) {
     }
 }
 
+private fun getScreenConstrainSet() = ConstraintSet {
+    val title = createRefFor(TITLE_LAYOUT_ID)
+    val content = createRefFor(CONTENT_LAYOUT_ID)
+    val button = createRefFor(BUTTON_LAYOUT_ID)
+
+    constrain(title) {
+        top.linkTo(parent.top)
+        bottom.linkTo(content.top)
+    }
+
+    constrain(content) {
+        top.linkTo(title.bottom)
+        bottom.linkTo(button.top)
+    }
+
+    constrain(button) {
+        top.linkTo(content.bottom)
+        bottom.linkTo(parent.bottom)
+        start.linkTo(parent.start)
+        end.linkTo(parent.end)
+    }
+}
+
 @Preview
 @Composable
 fun MainScreenPreview() {
@@ -121,7 +125,7 @@ fun MainScreenPreview() {
     }
 }
 
-private object MainScreenID {
+private object MainScreenId {
     const val TITLE_LAYOUT_ID = "TITLE_LAYOUT_ID"
     const val CONTENT_LAYOUT_ID = "CONTENT_LAYOUT_ID"
     const val BUTTON_LAYOUT_ID = "BUTTON_LAYOUT_ID"
